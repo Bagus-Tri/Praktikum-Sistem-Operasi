@@ -1,0 +1,2 @@
+nano file1.sh # membuat file
+chmod 777 file1.sh #mengubah izin rwx-rwx-rwx

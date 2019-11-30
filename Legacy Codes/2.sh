@@ -1,40 +1,26 @@
-echo "Masukkan nilai : "
-read N
+#!/bin/bash
 
-a=0
-b=1
+printf "Masukkan Detik = "
+read "detik"
 
-for (( i=0; i<N; i++ ))    # LOOP UNTUK MENCETAK BILANGAN FIBONANCI
-do
- echo -n "$a "
- fn=$((a + b))
- a=$b
- b=$fn
-done
-echo ""
+menit=60
+jam=3600
+hari=86400
 
-for (( x=1; x<=N; x++ ))   # LOOP UNTUK MENCETAK POLA ATAS SEJUMLAH N BARIS
-do
- for (( y=1; y<x; y++ ))    # LOOP UNTUK MENCETAK SPASI
- do
-  printf " "
- done
- for (( y=x; y<=N; y++ ))   # LOOP UNTUK MENCETAK BINTANG
- do
-  printf "*"
- done
- echo ""
-done
+if [[ $detik -le $menit ]]
+then
+    echo "$detik Detik"
+elif [[ $detik -le $jam ]]
+then
+    let menit=$detik/60
+    let detik=$detik-$menit*60    
+    echo "$menit menit $detik detik"
+elif [[ $detik -le $hari ]]
+then
+    let jam=$detik/3600
+    let detik=$detik-$jam*3600
+    let menit=$detik/60
+    let detik=$detik-$menit*60
+    echo "$jam jam $menit menit $detik detik"
+fi
 
-for (( x=2; x<=N; x++ ))   # LOOP UNTUK MENCETAK POLA BAWAH SEJUMLAH N-1 BARIS
-do
- for (( y=x; y<N; y++ ))    # LOOP UNTUK MENCETAK SPASI
- do
-  printf " "
- done
- for (( y=1; y<=x; y++ ))   # LOOP UNTUK MENCETAK BINTANG
- do
-  printf "*"
- done
- echo ""
-done

@@ -1,0 +1,10 @@
+mkdir ‘Semester 3’
+cd ‘Semester 3’
+mkdir ‘Sistem Operasi’
+cd ‘Sistem Operasi’
+nano ‘readme.txt’
+ls
+cat ‘readme.txt’
+
+apt-get install vokoscreen
+
