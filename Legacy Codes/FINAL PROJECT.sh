@@ -1,224 +1,307 @@
-clear
-i=0
+declare -a idd_karyawan
 declare -a nama
-declare -a kode
-declare -a lahir
-declare -a mati
-declare -a agama
+declare -a umur
+declare -a jabatan
+declare -a gaji
 
-cetak()
-{
-	echo -e "Data yang telah dimasukkan : \n"			
-		for (( q=0; q<i;q++  ))
-		do
-			echo -e "Data ke $[q+1]\nNama Mayat            : ${nama[q]}\nNomor Kematian        : ${kode[q]}\nTempat, tanggal lahir : ${lahir[q]}\nTempat, tanggal wafat : ${mati[q]}\nAgama                 : ${agama[q]}\n"
-		done
+i=0
+n=0
+
+cekping(){
+    echo "Are You Online?"
+    echo ""
+    echo "Masukkan Service yang akan anda test PING"
+    read cekname
+    echo ""
+    echo "Press CTRL + C to END Test Mode"
+    ping $cekname
 }
 
+folder(){
+	echo "Masukkan Nama Folder yang Ingin Dibuat : "
+	read new_folder
+	mkdir $new_folder
+	echo "Folder $new_folder Telah Berhasil Dibuat"
+	ls -l
+	read hold
+}
+
+manipulasi(){
+	echo "Manipulasi Hak Akses Berkas"
+	read ubah
+
+	echo "---penjelasan---"
+	echo "*hak akses untuk owner, group, dan other"
+	echo "*r = 4 (read-mengizinkan membaca berkas)"
+	echo "*w = 2 (write0-mengizinkan mengedit berkas)"
+	echo "*x = 1 (excutable-mengizinkan mengeksekusi berkas binary)"
+	echo "masukkan angkanya : "
+	read angka
+
+	echo -e "\nOke anda memilih $ubah"
+	sudo chmod $angka $ubah
+	echo -e "\nManipulasi berkas sudah selesai"
+	ls -l
+	read hold
+}
+
+tambah(){
+    flag=0
+    id_cari=0
+    echo -n "ID Karyawan        : "
+    read id_temp
+    echo -n "Nama Karyawan      : "
+    read nama_temp
+    echo -n "Umur Karyawan      : "
+    read umur_temp
+    echo -n "Jabatan            : "
+    read jabatan_temp
+    echo -n "Gaji Karyawan      : "
+    read gaji_temp
+
+    for id_cari in ${id_karyawan[*]}
+    do
+        if [[ $id_cari == $id_temp ]]
+        then
+            flag=1
+            break
+        fi
+    done
+    
+    if [[ $flag == 1 ]]
+    then
+        echo "ID Karyawan sudah ada!"
+    else
+        id_karyawan[$i]=$id_temp
+        nama[$i]=$nama_temp
+        umur[$i]=$umur_temp
+        jabatan[$i]=$jabatan_temp
+        gaji[$i]=$gaji_temp
+        i=$i+1
+        n=$n+1
+    fi
+}
+
+lihat(){
+    if(( $n==0 ))
+    then
+        echo "Tidak Ada Data!, Silahkan Tambahkan Data"
+    fi
+
+    for((i=0;i<n;i++))
+    do
+        echo "=================================================="
+        echo "ID Karyawan       : ${id_karyawan[$i]}"
+        echo "Nama Karyawan     : ${nama[$i]}"
+        echo "Umur              : ${umur[$i]}"
+        echo "Jabatan           : ${jabatan[$i]}"
+        echo "Gaji              : ${gaji[$i]}"
+        echo "=================================================="
+    done
+}
+
+cari_karyawan(){
+    echo -n "Masukkan ID Karyawan : "
+    read id_cari
+    a=0
+
+    for((i=0;i<n;i++))
+    do
+        if(( $id_cari == ${id_karyawan[$i]} ))
+        then 
+            a=1
+            break
+        fi
+    done
+    
+    if(( $a == 1 ))
+    then
+        echo "ID Karyawan Telah Ditemukan"
+        echo ""
+        echo "=================================================="
+        echo "ID Karyawan        : ${id_karyawan[$i]}"
+        echo "Nama Karyawan      : ${nama[$i]}"
+        echo "Umur               : ${umur[$i]}"
+        echo "Jabatan            : ${jabatan[$i]}"
+        echo "Gaji               : ${gaji[$i]}"
+        echo "=================================================="
+    else
+        echo "ID Karyawan tidak ditemukan, Coba lagi"
+    fi
+}
+
+perbarui(){
+    echo -n "Masukkan ID Karyawan yang ingin diupdate : "
+    read update_id
+    b=0
+
+    for((i=0;i<n;i++))
+    do
+        if(( $update_id == ${id_karyawan[$i]} ))
+        then 
+            b=1
+            break
+        fi
+    done
+
+    if(( $b == 1 ))
+    then
+        u=0
+        echo -n "ID Karyawan      : "
+        read id_temp
+        echo -n "Nama Karyawan    : "
+        read nama_temp
+        echo -n "Umur             : "
+        read umur_temp
+        echo -n "Jabatan          : "
+        read jabatan_temp
+        echo -n "Gaji             : "
+        read gaji_temp
+           
+        for id_cari in ${id_karyawan[*]}
+        do
+            if [[ $id_cari == $id_temp ]]
+            then
+                u=1
+                break
+            fi
+        done
+    
+        if [[ $u == 1 ]]
+        then
+            echo "ID Karyawan sudah digunakan"
+        else
+            id_karyawan[$i]=$id_temp
+            nama[$i]=$nama_temp
+            umur[$i]=$umur_temp
+            jabatan[$i]=$jabatan_temp
+            gaji[$i]=$gaji_temp
+        fi
+    else
+        echo "Karyawan belum terdaftar"
+    fi
+}
+
+phk(){
+    echo -n "Masukkan ID Karyawan yang ingin dipecat : "
+    read pecat_id
+    c=0
+
+    for((i=0;i<n;i++))
+    do 
+        if(( $pecat_id == ${id_karyawan[$i]} ))
+        then
+            c=1
+            break
+        fi
+    done
+
+    if(( $c == 1 ))
+    then
+        unset id_karyawan[$i] 
+        unset nama[$i]
+        unset umur[$i] 
+        unset jabatan[$i]
+        unset gaji[$i]
+        echo "Karyawan telah dipecat"
+
+        id_karyawan=( "${id_karyawan[@]}" )
+        nama=( "${nama[@]}" )
+        umur=( "${umur[@]}" )
+        jabatan=( "${jabatan[@]}" )
+        gaji=( "${gaji[@]}" )
+        n=$n-1
+    else
+        echo "ID Karyawan Tidak Ditemukan"
+    fi
+}
+#--------------------------MAIN
 while :;
 do
-	echo -e "Sistem Informasi Data Mayat pada Tempat Pemakaman Umum\n\n1. Masukkan data mayat\n2. Lihat data mayat\n3. Cari data mayat\n4. Perbarui data mayat\n5. Hapus data mayat\n6. Keluar program\n"
- 	echo -n "Masukkan pilihan : "
- 	read pilih
+    echo "==========================================================="
+    echo "=                  MYJob Assistent                        ="
+    echo "=                Portal Karyawan Kita                     ="
+    echo "=                Server Status: ONLINE                    ="
+    echo "==========================================================="
+    echo "System Time : "
+    date
+    echo ""
+    echo " 1. Tambah Karyawan Baru"
+    echo " 2. Lihat Karyawan Lama"
+    echo " 3. Cari Karyawan"
+    echo " 4. Perbarui Data Karyawan"
+    echo " 5. Pecat Karyawan"
+    echo " 6. Cek Koneksi Internet ke Server"
+    echo " 7. Manipulasi Hak Akses Berkas"
+    echo " 8. Buat folder"
+    echo " 9. Shutdown Komputer"
+    echo " 0. Exit"
+    echo ""
+    echo -n "Pilih menu : "
+    read pilih
 
- 	if (("$pilih" == 1));   # INPUT DATA
- 	then 
-  		clear
- 	 	echo -n "Nama Mayat            : "
- 	 	read nama[$i]
- 	 	echo -n "Nomor Kematian        : "
-  		read kode[$i]
-	  	echo -n "Tempat, tanggal lahir : "
-  		read lahir[$i]
-		echo -n "Tempat, tanggal wafat : "
-  		read mati[$i]
-	  	echo -n "Agama                 : "
-  		read agama[$i]
- 	 	i=`expr $i + 1`
-		
-		if (("$i" >= 2))
-		then
-			for (( g=0; g<i-1; g++ ))
-			do
-	   			if (( "${kode[$i-1]}" == "${kode[g]}" ))
-				then
-		     			echo -e "\nNomor kematian ini sudah terdaftar!\nMasukan nomor yang lain!"
-					read
-					unset nama[$i-1]
-					unset kode[$i-1]
-					unset lahir[$i-1]
-					unset mati[$i-1]
-					unset agama[$i-1]
-					i=`expr $i - 1`
-					break
-	   			fi
-			done
-		fi
- 	 	clear
- 
- 	elif (("$pilih" == 2));   # TAMPILKAN DATA
- 	then
-  		if (( i == 0 ))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat ditampilkan"
-   			read
-   			clear
-  		else
-   			clear
-   			cetak
-   			read
-   			clear
-  		fi
-
- 	elif (("$pilih" == 3));   # CARI DATA
- 	then
-  		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat dicari"
-   			read
-   			clear
-  		else  
-   			clear
-      			echo -n "Masukkan nomor kematian yang ingin dicari : "
-      			read cari
-   
-      			k=0
-      			while (($cari != ${kode[$k]}))
-      			do
-    				k=`expr $k + 1`
-      			done
-      
-   			if (($cari == ${kode[$k]}));
-   			then
-    				echo -e "Nama Mayat            : ${nama[k]}\nNomor Kematian        : ${kode[k]}\nTempat, tanggal lahir : ${lahir[k]}\nTempat, tanggal wafat : ${mati[k]}\nAgama                 : ${agama[k]}\n"   
-
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-   			fi
-   			read
-      			clear
-  		fi
-   
- 	elif (("$pilih" != 4 && "$pilih" != 2 && "$pilih" != 1 && "$pilih" != 3 && "$pilih" != 5 && "$pilih" != 6));   # APABILA MEMBERIKAN MASUKAN SELAIN 1-6
- 	then
-  		echo "Pilihan tidak valid"
-  		read
-  		clear
-
-	elif (( "$pilih" == 5 ));   # HAPUS DATA
-	then
-		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat dihapus"
-   			read
-   			clear
-  		else  
-   			clear
-   			cetak
-			echo -n "Masukkan nomor kematian : "
-      			read cari
-   
-      			k=0
-      			while (($cari != ${kode[$k]}))
-      			do
-    				k=`expr $k + 1`
-      			done
-      
-   			if (($cari == ${kode[$k]}));
-   			then			
-    				unset nama[k]
-				unset kode[k]
-				unset lahir[k]
-				unset mati[k]
-				unset agama[k]
-
-				if [[ -z ${kode[k]} ]]
-				then
-					if (($i == 1))
-					then
-						i=0
-	
-					elif (($i == 2))
-					then
-						for ((f=$k; f<i; f++))
-						do
-							nama[f]=${nama[$f+1]}
-							kode[f]=${kode[$f+1]}
-							lahir[f]=${lahir[$f+1]}
-							mati[f]=${mati[$f+1]}
-							agama[f]=${agama[$f+1]}
-						done
-						i=`expr $i - 1`
-
-					elif (($i > 2))
-					then
-						if [[ -n ${kode[$k-1]} ]]
-						then
-							for (( d=$k; d<i; d++ ))
-							do
-								nama[d]=${nama[$d+1]}
-								kode[d]=${kode[$d+1]}
-								lahir[d]=${lahir[$d+1]}
-								mati[d]=${mati[$d+1]}
-								agama[d]=${agama[$d+1]}
-							done
-						fi
-						i=`expr $i - 1`
-					fi									
-				fi
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-   			fi
-   			read
-      			clear
-  		fi
-
-	elif (("$pilih" == 4));   # MEMPERBAHARUI DATA
-	then
-		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat diperbarui"
-   			read
-   			clear
-  		else  
-   			clear
-			cetak
-      			echo -e -n "\nMasukkan nomor kematian yang ingin diperbarui : "
-      			read baru
-   
-      			l=0
-      			while (($baru != ${kode[$l]}))
-      			do
-    				l=`expr $l + 1`
-      			done
-      
-   			if (($baru == ${kode[$l]}));
-   			then
-				echo -n "Nama Mayat            : "
-		 	 	read nama[$l]
-			  	echo -n "Tempat, tanggal lahir : "
-		  		read lahir[$l]
-				echo -n "Tempat, tanggal wafat : "
-		  		read mati[$l]
-			  	echo -n "Agama                 : "
-		  		read agama[$l]
-
- 	 			clear
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-				read
-   			fi
-      			clear
-  		fi
- 
- 	else    # KELUAR PROGAM
-  		exit
- 	fi
+    if(( $pilih == 1 ))
+    then
+        clear
+        tambah
+	echo "Sukses!, ID $id_temp Berhasil diperkerjakan"
+	echo ""	
+	echo "Press any key to continue"	
+	read hold
+        clear
+    elif(( $pilih == 2 ))
+    then
+        clear
+        lihat
+	read hold
+	clear
+    elif(( $pilih == 3 ))
+    then 
+        clear
+        cari_karyawan
+	read hold
+	clear
+    elif(( $pilih == 4 ))
+    then
+        clear
+        perbarui
+	read hold
+        clear
+    elif(( $pilih == 5 ))
+    then 
+        clear
+        phk
+	read hold
+	clear
+    elif(( $pilih == 6 ))
+    then
+	clear
+	cekping
+	read hold
+	clear
+    elif(( $pilih == 7 ))
+    then
+	clear
+	manipulasi
+	read hold
+	clear
+    elif(( $pilih == 8 ))
+    then 
+	clear
+	folder
+	read hold
+	clear
+    elif(( $pilih == 9 ))
+    then 
+	clear
+	echo "BYE!"
+	poweroff
+    elif(( $pilih == 0 ))
+    then
+	echo "Shut about to down"
+	echo "thx"
+        exit
+    else
+        echo "Input yang Anda masukkan Salah!"
+    fi
 done
